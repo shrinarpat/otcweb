@@ -1,0 +1,43 @@
+<div class="main-content">
+    <div *ngIf="logged_out" class="row">
+        <div class="col-sm-1">
+        </div>
+ 
+        <div class="col-sm-3 text-center">
+
+            <h4>Login to continue</h4>
+            <input class="form-control" type="text" placeholder="Company Code" [(ngModel)]="cmcode">
+         
+            <input class="form-control" type="text" placeholder="Username" [(ngModel)]="username">
+            <input class="form-control" (keyup.enter)="loginButton()" type="password" placeholder="Password"
+                [(ngModel)]="password">
+            <br>
+            <button class="btn btn-primary" (click)="loginButton()">Login</button>
+            &nbsp;
+            <!-- <button class="btn btn-default" (click)="registerButton()">Register</button> -->
+            <br>
+            <br>
+            <h5 class="pull-center text-primary"  id="forgetpassword"(click)="contactAdmin()">Forgot password?</h5>
+            <h5 *ngIf="invalid_user" class="pull-center text-danger">Invalid username or password.</h5>           
+        </div>
+
+    </div>
+
+    <div *ngIf="!logged_out" class="row">
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-3 text-center">
+
+            <h4>Are you sure?</h4>
+            <br>
+            <a [routerLink]="['/history']">
+                <button class="btn btn-default">Cancel</button>
+            </a>
+            &nbsp;
+            <button class="btn btn-primary" (click)="logoutButton()">Logout</button>
+            <br>
+        </div>
+        <div class="col-sm-8">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,685 @@
+<div *ngIf="login_token" id="pagetop">
+  <div class="main-content">
+    <div *ngIf="!review_mode">
+      <div class="panel-group" id="accordion">
+        <div *ngIf="permission_flag" class="panel panel-default">
+          <div class="panel-heading">
+            <!-- <a (click)="checkGeneralData()" data-toggle="collapse" data-parent="#accordion"
+                          href="#collapse7"> -->
+            <h4 class="panel-title">Add New Employee &nbsp;</h4>
+            <!-- </a> -->
+          </div>
+          <div class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div *ngIf="!flagnewEmp" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary"
+                    (click)="createNewEmp()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Add New Emp
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+
+                <div class="col-sm-4"></div>
+              </div>
+
+              <div *ngIf="flagnewEmp" class="row">
+                <div class="col-sm-4">
+                  <div class="dropdown" *ngIf="isCMS">
+                    <!-- *! ng-select implemention -->
+                    <ng-select
+                      [items]="company_list$ | async"
+                      bindLabel="CompanyCode"
+                      [loading]="companies_loading"
+                      [virtualScroll]="virtual_scroll_companies"
+                      [clearable]="clearable_company"
+                      placeholder="Select Company"
+                      class="fitalign"
+                      (focus)="getCompanies()"
+                      (change)="getCompanyFlag($event)"
+                    >
+                    </ng-select>
+                    <!-- 
+                       [(ngModel)]="selectedCompanyCode"
+                      
+                      <button (click)="getCompanies()"
+                                        class="btn btn-default dropdown-toggle fitalign" type="button"
+                                        id="dropdownMenu1reg" data-toggle="dropdown" aria-haspopup="true"> 
+                                        <span *ngIf=" !company_flag">Select Company Code</span>
+                                        <span *ngIf=" company_flag">{{selectedCompanyCode}}  <b>&#10004;</b></span>
+                                        &nbsp;<span ><i class="caret"></i></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1reg">
+                                        <li *ngFor="let z of company_list"><a
+                                                (click)="getCompanyFlag(z);">{{z.CompanyCode}}</a>
+                                        </li>
+                                    </ul> -->
+                  </div>
+                  <div *ngIf="!isCMS">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Company Code"
+                      [(ngModel)]="company_code"
+                      readonly
+                    />
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !company_flag"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Employee Code"
+                    [(ngModel)]="emp_code"
+                  />
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(emp_code)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Employee Name"
+                    [(ngModel)]="emp_name"
+                  />
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(emp_name)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="flagnewEmp" class="row">
+                <!-- <div class="col-sm-4">
+                                <input type="file" (change)="onFileChange($event)" multiple="false">
+                            </div> -->
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Employee Mobile No"
+                    [(ngModel)]="reg_mobile_no"
+                    [maxlength]="10"
+                    (input)="validateMobileNumber()"
+                  />
+                  <div *ngIf="!showmobAlert">
+                    <span class="required-asterisk">
+                      *<span
+                        *ngIf="show_blank_alert && nullCheck(reg_mobile_no)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="showmobAlert">
+                    <span class="required-asterisk"
+                      >* {{ mobileNoRemark }}</span
+                    >
+                  </div>
+                </div>
+
+                <div class="col-sm-4" *ngIf="!flagBranch">
+                  <div class="dropdown">
+                    <!-- *!ng-select for branches -->
+                    <ng-select
+                      [items]="branch_list$ | async"
+                      placeholder="Select Branch"
+                      bindLabel="BranchLabel"
+                      class="fitalign"
+                      [loading]="branches_loading"
+                      (focus)="getBranches()"
+                      (change)="getBranchFlag($event)"
+                      [virtualScroll]="virtual_scroll_branch"
+                      [clearable]="clearable_branch"
+                    >
+                    </ng-select>
+                    <!-- 
+                       [(ngModel)]="selectedBranchName"
+                      [disabled]="disabledBranchSelection"
+                      
+                      <button
+                      (click)="getBranches()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagbranchtype">Select Branch</span>
+                      <span *ngIf="flagbranchtype"
+                        >{{ selectedBranchName }} <b>&#10004;</b></span
+                      >
+                      &nbsp; <span><i class="caret"></i></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of branch_list">
+                        <a (click)="getBranchFlag(z)">{{
+                          z.BranchName + "(" + z.BranchCode + ")"
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+
+                  <div>
+                    <span class="required-asterisk">
+                      *
+                      <span
+                        class="required-asterisk"
+                        *ngIf="
+                          show_blank_alert && !flagbranchtype && !allow_staff
+                        "
+                      >
+                        This is a required field for the role
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <!-- <div class="col-sm-4">
+                                 
+                                  
+                                 
+                                
+                            </div> -->
+              </div>
+              <div *ngIf="flagnewEmp" class="row">
+                <div class="col-sm-4">
+                  <table class="table" id="conf">
+                    <tbody>
+                      <span><b>Provide Web Portal Privilege</b></span>
+                      <tr>
+                        <td class="privilege">
+                          <div
+                            class="custom-control custom-radio custom-control-inline"
+                          >
+                            <input
+                              type="radio"
+                              class="custom-control-input"
+                              id="defaultInline1"
+                              name="inlineDefaultRadiosExample"
+                              [value]="privilegeUnchecked"
+                              (click)="getCheckboxesValue(privilegeUnchecked)"
+                              checked
+                              mdbInput
+                            />
+                            &nbsp;<label
+                              class="custom-control-label"
+                              for="defaultInline1"
+                              >No</label
+                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input
+                              type="radio"
+                              class="custom-control-input"
+                              id="defaultInline1"
+                              name="inlineDefaultRadiosExample"
+                              [value]="privilegeChecked"
+                              (click)="getCheckboxesValue(privilegeChecked)"
+                              mdbInput
+                            />
+                            &nbsp;<label
+                              class="custom-control-label"
+                              for="defaultInline1"
+                              >Yes</label
+                            >
+                          </div>
+                        </td>
+                        <!-- <td>    
+                                            <input type="checkbox" name="active_transaction" id="act_trans" [(ngModel)]="allow_staff">
+                                            </td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-4" *ngIf="allow_staff">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Employee Email Id"
+                    [(ngModel)]="user_email"
+                    (input)="validateEmailId()"
+                  />
+                  <div *ngIf="!showEmailAlert">
+                    <span class="required-asterisk">
+                      *<span
+                        *ngIf="
+                          show_blank_alert &&
+                          nullCheck(user_email) &&
+                          allow_staff
+                        "
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="showEmailAlert">
+                    <span class="required-asterisk">* Invalid Email Id</span>
+                  </div>
+                </div>
+
+                <div class="col-sm-4" *ngIf="allow_staff">
+                  <div class="dropdown">
+                    <!-- *! ng-select for role selection -->
+                    <ng-select
+                      [items]="role_list$ | async"
+                      bindLabel="RoleName"
+                      placeholder="Select Role"
+                      (focus)="fetchRoles()"
+                      (change)="getRoleFlag($event)"
+                      [(ngModel)]="roletype"
+                      class="fitalign"
+                      [clearable]="clearable_role"
+                      [loading]="roles_loading"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="fetchRoles()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!roleFlag">Select Role</span>
+                      <span *ngIf="roleFlag"
+                        >{{ roletype }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span><i class="caret"></i></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of role_list">
+                        <a (click)="getRoleFlag(z)">{{ z.RoleName }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="
+                          show_blank_alert && nullCheck(roletype) && allow_staff
+                        "
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4" *ngIf="flagBranchyes">
+                  <div class="dropdown">
+                    <button
+                      (click)="getBranches()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagbranchtype">Select Branch</span>
+                      <span *ngIf="flagbranchtype"
+                        >{{ selectedBranchName }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span><i class="caret"></i></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of branch_list">
+                        <a (click)="getBranchFlag(z)">{{
+                          z.BranchName + "(" + z.BranchCode + ")"
+                        }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- <div *ngIf="!showbranch">
+                                    <input class="form-control" type="text" placeholder="Branch Code"
+                                    [(ngModel)]="selectedBranchCode"  readonly>
+                                </div> -->
+                  <div>
+                    <span class="required-asterisk">
+                      *
+                      <span
+                        class="required-asterisk"
+                        *ngIf="
+                          show_blank_alert &&
+                          !flagbranchtype &&
+                          (!allow_staff ||
+                            (allow_staff &&
+                              !nullCheck(roletype) &&
+                              roletype.includes('Branch')))
+                        "
+                      >
+                        This is a required field for the role
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <br /><br />
+              <div *ngIf="flagnewEmp" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="addEmployee()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a
+              (click)="checkGeneralData()"
+              data-toggle="collapse"
+              data-parent="#accordion"
+            >
+              <h4 class="panel-title">
+                Edit Employee &nbsp;
+                <span (click)="showFilter()">
+                  <i class="pe-7s-filter pe-4x pe-va">Filter</i></span
+                >
+              </h4>
+            </a>
+          </div>
+          <div *ngIf="show_filter" class="panel-body">
+            <div class="col-xs-6 col-sm-2" *ngIf="isCMS">
+              <label>&nbsp;&nbsp;Company Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Company..."
+                [(ngModel)]="comp_code"
+                (input)="filter($event.target.value, 1)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label for="branchCode"
+                >&nbsp;&nbsp;Branch Code&nbsp;&nbsp;</label
+              >
+              <input
+                type="text"
+                class="form-control filter"
+                [(ngModel)]="branch_code_f"
+                placeholder="Branch Code..."
+                (input)="filter($event.target.value, 3)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Employee Name&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder="Search  EMPName... "
+                [(ngModel)]="emp_name_f"
+                (input)="filter($event.target.value, 2)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label for="empCode">&nbsp;&nbsp;Employee Code&nbsp;&nbsp;</label>
+              <input
+                type="text"
+                class="form-control filter"
+                placeholder="Emp Code..."
+                [(ngModel)]="emp_code_f"
+                (input)="filter($event.target.value, 4)"
+              />
+            </div>
+          </div>
+          <div class="panel-collapse collapse in">
+            <table *ngIf="got_emp" class="table">
+              <thead>
+                <tr>
+                  <!-- <th>Emp CODE</th> -->
+                  <th>Company Code</th>
+                  <th>Branch Code</th>
+                  <th>Employee Code</th>
+                  <th>Employee Name</th>
+                  <th>Mobile Number</th>
+                  <!-- <th>Reg-Staus</th> -->
+                  <th *ngIf="permission_flag && !employeeFlag">De-Activate</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="!employeeFlag">
+                <tr
+                  (click)="EmpDetails(emp)"
+                  *ngFor="
+                    let emp of emp_list
+                      | paginate: { itemsPerPage: 8, currentPage: p };
+                    let i = index;
+                    let odd = odd
+                  "
+                  [ngClass]="odd ? 'odd_col' : 'even_col'"
+                >
+                  <!-- <td>{{ emp }}</td> -->
+                  <td>{{ emp["CompanyCode"] }}</td>
+                  <td>{{ emp["BranchCode"] }}</td>
+                  <td>{{ emp["employeeCode"] }}</td>
+                  <td>{{ emp["employeeName"] }}</td>
+                  <td>{{ emp["registeredMobileNumber"] }}</td>
+                  <td *ngIf="permission_flag">
+                    <input
+                      type="radio"
+                      name="activate"
+                      id="act"
+                      (change)="editActiveStatus(emp, 1)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+              <tbody *ngIf="employeeFlag">
+                <tr
+                  *ngFor="
+                    let emp of deactivate_list
+                      | paginate: { itemsPerPage: 8, currentPage: p };
+                    let i = index;
+                    let odd = odd
+                  "
+                  [ngClass]="odd ? 'odd_col' : 'even_col'"
+                >
+                  <!-- <td>{{ emp }}</td> -->
+                  <td>{{ emp["employeeCode"] }}</td>
+                  <td>{{ emp["employeeName"] }}</td>
+                  <td>{{ emp["CompanyCode"] }}</td>
+                  <td>{{ emp["BranchCode"] }}</td>
+                  <td>{{ emp["registeredMobileNumber"] }}</td>
+                  <!-- <td *ngIf="permission_flag"><input type="checkbox" name="activate" id="act" 
+                                    (change)="editActiveStatus(emp)" ></td> -->
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls *ngIf="got_emp" (pageChange)="p = $event">
+            </pagination-controls>
+            <!-- (change)="editActiveStatus(emp)" -->
+            <div *ngIf="!got_emp">
+              <br />
+              <h5 class="text-primary">&nbsp;Loading...</h5>
+            </div>
+            <div *ngIf="flagEditEmp && !deactiveapicall" class="panel-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <h4>Employee Details</h4>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-4">
+                  <h6>&nbsp; Employee Code</h6>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="viewEmpCode"
+                    readonly
+                  />
+                </div>
+                <div class="col-sm-4">
+                  <h6>&nbsp; Employee Name</h6>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="viewEmpName"
+                  />
+                </div>
+                <div class="col-sm-4">
+                  <h6>&nbsp; Company Code</h6>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="viewCompanyCode"
+                    readonly
+                  />
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div *ngIf="showBranchFlag" class="col-sm-4">
+                  <h6>&nbsp; Branch Code</h6>
+                  <ng-select
+                    [items]="edit_branch_list$ | async"
+                    placeholder="Select Branch"
+                    bindLabel="BranchLabel"
+                    [(ngModel)]="edit_branch_selected_value"
+                    class="fitalign"
+                    [loading]="edit_branches_loading"
+                    (focus)="getEditBranches()"
+                    (change)="getEditBranchFlag($event)"
+                    [virtualScroll]="virtual_scroll_branch"
+                    [clearable]="clearable_branch"
+                  >
+                  </ng-select>
+                  <!-- <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="viewBranchCode"
+                    readonly
+                  /> -->
+                  <!-- <div class="dropdown">
+                                        <button (click)="getBranches()"
+                                            class="btn btn-default dropdown-toggle fitalign" type="button"
+                                            id="dropdownMenu1reg" data-toggle="dropdown" aria-haspopup="true"> 
+                                            <span *ngIf=" !flagbranchtype" >{{viewBranchCode}}</span>
+                                            <span  *ngIf=" flagbranchtype">{{selectedBranchCode}}   <b>&#10004;</b></span> 
+                                             &nbsp; <span ><i class="caret"></i></span>
+                                           
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1reg">
+                                            <li *ngFor="let z1 of branch_list"><a
+                                                    (click)="getBranchFlag(z1); viewBranchID=z1.BranchID;">{{z1.BranchName+"("+z1.BranchCode+")"}}</a>
+                                            </li>
+                                        </ul>
+                                    </div> -->
+                </div>
+                <div class="col-sm-4">
+                  <h6>&nbsp; Mobile No</h6>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="viewEmpMobile"
+                    [maxlength]="10"
+                    (input)="validateMobileNumber()"
+                  />
+
+                  <div *ngIf="!showmobEditAlert">
+                    <span class="required-asterisk">
+                      *<span
+                        *ngIf="show_blank_alert && nullCheck(viewEmpMobile)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="showmobEditAlert">
+                    <span class="required-asterisk"
+                      >* {{ mobileNoRemark }}</span
+                    >
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <i
+                    id="userhelp"
+                    class="pe-7s-info"
+                    tooltip="Select only when you want to De-register user"
+                    placement="right"
+                  ></i>
+                  <h6>&nbsp; De-register</h6>
+                  &nbsp; &nbsp; &nbsp; &nbsp;<input
+                    type="checkbox"
+                    name="deregister"
+                    id="dreg"
+                    [(ngModel)]="de_Register"
+                  /><br />
+                  <!-- <span class="required-asterisk">
+                                    <span >
+                                        Select only when you want to De-register user
+                                    </span>
+                                </span> -->
+                </div>
+              </div>
+              <br />
+              <!-- in case of submit Edit details -->
+            </div>
+            <div *ngIf="flagEditEmp" class="panel-body">
+              <div *ngIf="flagEditEmp && permission_flag" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="confirmSubmitEmp()"
+                    [disabled]="disabledUpdate"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

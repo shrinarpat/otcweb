@@ -1,0 +1,184 @@
+<div *ngIf="login_token" id="pagetop">
+  <div class="main-content">
+    <div>
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              Upload Data &nbsp;
+              <span
+                ><i
+                  class="pe-7s-info"
+                  tooltip="{{ text }}"
+                  placement="right"
+                ></i
+              ></span>
+            </h4>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dropdown">
+                    <button
+                      (click)="getUploadType()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagUploadtype">Select Type of Upload</span>
+                      <span *ngIf="flagUploadtype"
+                        >{{ type }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of type_upload">
+                        <a (click)="type = z; getUploadType()">{{ z }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <span class="required-asterisk"
+                    >*
+                    <span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(type)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+                <div class="col-sm-4">
+                  <div class="dropdown" *ngIf="isCMS && comp_drop_flag">
+                    <!-- *! ng-select implemention -->
+                    <ng-select
+                      [items]="company_list$ | async"
+                      bindLabel="CompanyCode"
+                      [loading]="companies_loading"
+                      [virtualScroll]="virtual_scroll_companies"
+                      [clearable]="clearable_company"
+                      placeholder="Select Company"
+                      [(ngModel)]="selectedCompanyCode"
+                      class="fitalign"
+                      (focus)="getCompanies()"
+                      (change)="getCompanyFlag($event)"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getCompanies()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!company_flag">Select Company Code</span>
+                      <span *ngIf="company_flag"
+                        >{{ selectedCompanyCode }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of company_list">
+                        <a (click)="getCompanyFlag(z)">{{ z.CompanyCode }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!isCMS && comp_drop_flag">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Company Code"
+                      [(ngModel)]="company_code"
+                      readonly
+                    />
+                  </div>
+                  <div *ngIf="comp_drop_flag">
+                    <span class="required-asterisk"
+                      >*
+                      <span
+                        class="required-asterisk"
+                        *ngIf="
+                          show_blank_alert && nullCheck(selectedCompanyCode)
+                        "
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- <div class="col-sm-4" *ngIf="branch_drop_flag">
+                                    <div class="dropdown" >
+                                        <button (click)="getBranches()"
+                                            class="btn btn-default dropdown-toggle fitalign" type="button"
+                                            id="dropdownMenu1reg" data-toggle="dropdown" aria-haspopup="true"> 
+                                            <span *ngIf=" !flagbranchtype">Select Branch</span>
+                                            <span *ngIf=" flagbranchtype">{{selectedBranchCode}}  <b>&#10004;</b></span>
+                                            &nbsp;<span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1reg">
+                                            <li *ngFor="let z of branch_list"><a
+                                                    (click)="getBranchFlag(z);">{{z.BranchCode}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <span class="required-asterisk">*
+                                            <span class="required-asterisk" *ngIf="show_blank_alert && nullCheck(selectedBranchCode)">
+                                                This is a required field
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div> -->
+              </div>
+              <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+              <br /><br />
+              <div class="row">
+                <div *ngIf="flagUploadtype && company_flag" class="col-sm-12">
+                  <hot-table
+                    id="htable"
+                    [data]="dataset"
+                    [options]="options"
+                    [colHeaders]="temp_col"
+                    [columns]="columns"
+                  >
+                  </hot-table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <br />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="submitBulkdata()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

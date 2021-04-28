@@ -1,0 +1,442 @@
+<div *ngIf="login_token" id="pagetop">
+  <div class="main-content">
+    <div *ngIf="!review_mode">
+      <div class="panel-group" id="accordion">
+        <div *ngIf="permission_flag" class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion">
+              <h4 class="panel-title">Add Daily Acitivity ATM &nbsp;</h4>
+            </a>
+          </div>
+          <div class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dropdown" *ngIf="isCMS">
+                    <!-- *! ng-select companies -->
+                    <ng-select
+                      [items]="company_list$ | async"
+                      bindLabel="CompanyCode"
+                      placeholder="Select Company Code"
+                      class="fitalign"
+                      [loading]="companies_loading"
+                      [clearable]="clearable_company"
+                      [virtualScroll]="virtual_scroll_company"
+                      (focus)="getCompanies()"
+                      (change)="getCompanyFlag($event)"
+                    >
+                    </ng-select>
+                    <!-- [(ngModel)]="selectedCompanyCode"
+                       <button
+                      (click)="getCompanies()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!company_flag">Select Company Code</span>
+                      <span *ngIf="company_flag"
+                        >{{ selectedCompanyCode }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of companies">
+                        <a (click)="getCompanyFlag(z)">{{ z.CompanyCode }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!isCMS">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Company Code"
+                      [(ngModel)]="company_code"
+                      readonly
+                    />
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !company_flag"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="dropdown" *ngIf="showbranch">
+                    <!-- *! ng-select Implemention -->
+                    <ng-select
+                      placeholder="Select Branch"
+                      [items]="branch_list$ | async"
+                      bindLabel="BranchLabel"
+                      [virtualScroll]="virtual_scroll_branch"
+                      [clearable]="clearable_branch"
+                      [loading]="branches_loading"
+                      class="fitalign"
+                      appendTo="body"
+                      [disabled]="disabledBranchSelection"
+                      [(ngModel)]="selectedBranchName"
+                      (change)="getBranchFlag($event)"
+                      (focus)="getBranches()"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getBranches()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagbranchtype">Select Branch</span>
+                      <span *ngIf="flagbranchtype"
+                        >{{ selectedBranchName }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of branch_list">
+                        <a (click)="getBranchFlag(z)">{{
+                          z.BranchName + "(" + z.BranchCode + ")"
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!showbranch">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Branch Code"
+                      [(ngModel)]="selectedBranchCode"
+                      readonly
+                    />
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagbranchtype"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <!-- <input auto-complete   class="form-control" type="text" placeholder="ATM ID"
+                                    [(ngModel)]="atm_id" [source]="atm_id_list" max-num-list=20, min-chars=3 > -->
+                  <div class="dropdown">
+                    <!-- *! ng-select for atmList -->
+                    <ng-select
+                      [items]="atm_list$ | async"
+                      bindLabel="ATMID"
+                      placeholder="Select ATM ID"
+                      class="fitalign"
+                      [virtualScroll]="virtual_scroll_atm"
+                      [loading]="atm_loading"
+                      [disabled]="disabledAtmSelection"
+                      [clearable]="clearable_atm"
+                      (focus)="getAtmList()"
+                      (change)="getAtmFlag($event)"
+                      [(ngModel)]="atm_code"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getAtmList()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagatm">Select ATM ID</span>
+                      <span *ngIf="flagatm">{{ ATMCODE }} <b>&#10004;</b></span>
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of atm_list">
+                        <a (click)="ATMCODE = z.ATMID; getAtmFlag(z)">{{
+                          z.ATMID
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagatm"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="dropdown">
+                    <!-- *! ng-select for get activity -->
+                    <ng-select
+                      [items]="type_activity$ | async"
+                      bindLabel="ActivityName"
+                      placeholder="Select Type of Activity"
+                      class="fitalign"
+                      [loading]="activities_loading"
+                      [disabled]="disabledActivitySelection"
+                      [clearable]="clearable_activity"
+                      (focus)="getActivityType()"
+                      (change)="getActivityflag($event)"
+                      [(ngModel)]="selectedTRTYPE"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagactivitytype"
+                        >Select Type of Activity</span
+                      >
+                      <span *ngIf="flagactivitytype"
+                        >{{ selectedTRTYPE }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of activities">
+                        <a (click)="getActivityflag(z)">{{ z.ActivityName }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagactivitytype"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Transaction Date"
+                    [(ngModel)]="from_date"
+                    bsDatepicker
+                    [bsConfig]="datepickerconfig"
+                    [minDate]="minDate"
+                    readonly
+                  />
+                  <i class="fa fa-calendar form-control-feedback"></i>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(from_date)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- <div class="col-sm-4">
+                                    <input class="form-control" type="text"  placeholder="To Date"
+                                    [(ngModel)]="to_date"  bsDatepicker [bsConfig]="datepickerconfig" [minDate]="minDate" readonly >
+                                                                            <div>
+                                            <span class="required-asterisk">*</span>
+                                        </div>
+                                </div> -->
+              </div>
+
+              <br />
+              <div class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="saveDailyActivty()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="flagnewEmp" class="row">
+                <!-- <div class="col-sm-4">
+                                    <input type="file" (change)="onFileChange($event)" multiple="false">
+                                </div> -->
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Emp ID"
+                    [(ngModel)]="emp_id"
+                  />
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Emp Name"
+                    [(ngModel)]="emp_name"
+                  />
+                </div>
+
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="EMP mobile No"
+                    [(ngModel)]="reg_mobile_no"
+                  />
+                </div>
+              </div>
+              <div *ngIf="flagnewEmp" class="row">
+                <!-- <div class="col-sm-4">
+                                  <input type="file" (change)="onFileChange($event)" multiple="false">
+                              </div> -->
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Created By "
+                    [(ngModel)]="createdBy"
+                    readonly
+                  />
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Created Date"
+                    [(ngModel)]="createdDate"
+                    readonly
+                  />
+                </div>
+              </div>
+
+              <br /><br />
+              <div *ngIf="flagnewEmp" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="saveNewEmp()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion">
+              <h4 class="panel-title">
+                Daily Activities &nbsp;
+                <span (click)="showFilter()">
+                  <i class="pe-7s-filter pe-4x pe-va">Filter</i></span
+                >
+              </h4>
+            </a>
+          </div>
+          <div *ngIf="show_filter" class="panel-body">
+            <div class="col-xs-6 col-sm-2" *ngIf="isCMS">
+              <label>&nbsp;&nbsp;Company Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder="Search Company..."
+                [(ngModel)]="comp_code"
+                (input)="filter($event.target.value, 2)"
+              />
+            </div>
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;ATM Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search ATM... "
+                [(ngModel)]="atm_codef"
+                (input)="filter($event.target.value, 1)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Activity Name&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Activity..."
+                [(ngModel)]="activity_name"
+                (input)="filter($event.target.value, 3)"
+              />
+            </div>
+          </div>
+
+          <div class="panel-collapse collapse in">
+            <table *ngIf="got_data" class="table">
+              <thead>
+                <tr>
+                  <th>COMPANY CODE</th>
+                  <th>ATM CODE</th>
+                  <th>ACTIVITY NAME</th>
+                  <th>Trans Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let item of dailyactivity_list
+                      | paginate: { itemsPerPage: 8, currentPage: p };
+                    let i = index;
+                    let odd = odd
+                  "
+                  [ngClass]="odd ? 'odd_col' : 'even_col'"
+                >
+                  <td>{{ item["CompanyName"] }}</td>
+                  <td>{{ item["ATMID"] }}</td>
+                  <td>{{ item["TransType"] }}</td>
+                  <td>{{ Dateformattter(item["TransDate"]) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls *ngIf="got_data" (pageChange)="p = $event">
+            </pagination-controls>
+            <div *ngIf="!got_data">
+              <br />
+              <h5 class="text-primary">&nbsp;Loading...</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

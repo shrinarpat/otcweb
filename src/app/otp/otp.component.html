@@ -1,0 +1,33 @@
+<div class="main-content">
+
+  <!-- <div class="content">
+    <div class="o-c">
+      <div>
+        <div class="card">
+          <p class="a-o-i">Enter verification code</p>
+          <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)"  [config]="config" class="setup"></ng-otp-input>
+         <br>
+          <button> Hello</button>
+  
+  
+        </div>
+      </div>
+    </div>
+  </div> -->
+   
+ 
+  <div class="row">
+    
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">      
+          <p class="a-o-i">Enter verification code</p>
+          <ng-otp-input #ngOtpInput (onInputChange)="onOtpChange($event)"  [config]="config" class="setup"></ng-otp-input> 
+      </div>
+      <div class="col-sm-4">
+        <br><br><br>
+        <button class="btn btn-primary margin-btn" (click)="reSendOtp()">Re-Send OTP</button> &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-primary margin-btn" (click)="sendDetails()">Submit</button>
+      </div>    
+  </div>
+</div>
+

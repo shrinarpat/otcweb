@@ -1,0 +1,114 @@
+<div *ngIf="login_token" id="pagetop">
+    <div  class="main-content">
+        <div *ngIf="!review_mode">
+        <div class="panel-group" id="accordion">
+        <div  *ngIf="permission_flag" class="panel panel-default">
+            <div class="panel-heading">
+                <a  data-toggle="collapse" data-parent="#accordion"
+                    href="#collapse7">
+                    <h4 class="panel-title">
+                        Assign Roles  &nbsp; 
+                    </h4>
+                </a>
+            </div>
+            <div id="collapse7" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div  class="row" >
+                        <div class="col-sm-4">
+                            <input auto-complete class="form-control" type="text" min="0"
+                                placeholder="Employee Code of Employee 1 " [(ngModel)]="emp_id"
+                                [source]="emp_id_list" max-num-list=20, min-chars=2
+                                (ngModelChange)="name_cust=name_cust_list[emp_id_list.indexOf(emp_id)]">
+                              
+                        </div>
+                        <div class="col-sm-4">
+                            <input class="form-control" type="text" placeholder="Name of Employee"
+                                [(ngModel)]="name_cust">
+                        </div>
+                        <div class="col-sm-4" >
+                            <div class="dropdown">
+                                <button (click)="getRoleType()"
+                                    class="btn btn-default dropdown-toggle fitalign" type="button"
+                                    id="dropdownMenu1reg" data-toggle="dropdown" aria-haspopup="true"> 
+                                    <span *ngIf=" !flagroletype">Select Role</span>
+                                    <span *ngIf=" flagroletype">{{role}}  <b>&#10004;</b></span>
+                                    &nbsp;<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1reg">
+                                    <li *ngFor="let z of type_role"><a
+                                            (click)="role = z; getRoleflag()">{{z}}</a>
+                                    </li>
+                                </ul>
+                            </div>     
+                        </div>
+                       
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <input class="form-control" type="text" placeholder="User Name"
+                            [(ngModel)]="user_name" >
+    
+
+                        </div>
+                      
+                        <div class="col-sm-4">
+                            <input class="form-control" type="text" placeholder="Company Name"
+                            [(ngModel)]="cmp_name" >
+                        </div>
+                       
+                    </div>
+                   
+                    <br>
+                   <br><br>
+                    <div class="row">  
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary pull-left" (click)="saveNewRole()" [disabled]="confirm_pressed">Submit</button>
+                        </div> 
+                        
+                    </div>  
+                </div>
+                </div>
+        </div>
+        <!-- <div  class="panel panel-default">
+            <div class="panel-heading">
+                <a  data-toggle="collapse" data-parent="#accordion"
+                    href="#collapse7">
+                    <h4 class="panel-title">
+                        Daily Activities  &nbsp; 
+                    </h4>
+                </a>
+            </div>
+            <div id="collapse7" class="panel-collapse collapse in">
+                <table *ngIf="got_data" class="table" >
+                    <thead>
+                      <tr>
+                        <th>ACTIVITY NAME</th>
+                        <th>ATM ID</th>
+                        <th>Company Name</th>
+                       
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr 
+                        *ngFor="let i of activity_list | paginate: { itemsPerPage: 8, currentPage: p }; let i = index;let odd = odd" [ngClass]="odd ? 'odd_col' : 'even_col'">
+                        <td>{{ i['activty_name'] }}</td>
+                        <td>{{ i['atm_id'] }}</td>
+                        <td>{{i['company_name']}}</td>
+                        </tr>
+                    </tbody>
+              
+                  </table>
+                  <pagination-controls *ngIf="got_data" (pageChange)="p = $event">
+                  </pagination-controls>
+                  <div *ngIf="!got_data ">
+                    <br>
+                    <h5 class="text-primary">&nbsp;No data</h5>
+                  </div>
+                
+        </div>
+        </div> -->
+      
+    </div>
+</div>

@@ -1,0 +1,29 @@
+input {
+    margin-top: 10px;
+    border-color:grey;
+}
+::placeholder { /* Firefox, Chrome, Opera */ 
+    color: grey;
+} 
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */ 
+    color: grey;
+} 
+  
+::-ms-input-placeholder { /* Microsoft Edge */ 
+    color: grey;
+} 
+.fitalign {
+    margin-top: 10px;
+    width: 100%;
+}
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+
+#forgetpassword{
+    cursor: pointer;
+}

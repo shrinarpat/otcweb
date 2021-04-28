@@ -1,0 +1,618 @@
+<div id="pagetop">
+  <div class="main-content">
+    <div>
+      <div class="panel-group" id="accordion">
+        <div *ngIf="!flagEditCustomers" class="panel panel-default">
+          <div class="panel-heading">
+            <!-- <a (click)="checkGeneralData()" data-toggle="collapse" data-parent="#accordion"
+                          href="#collapse7"> -->
+            <h4 class="panel-title">Fill Customer Details &nbsp;</h4>
+            <!-- </a> -->
+          </div>
+
+          <div id="collapse7" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Customer Code"
+                    [(ngModel)]="customer_code"
+                    [maxlength]="10"
+                    (input)="validatecustomerCode()"
+                  />
+                  <div *ngIf="!show_customer_alert">
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(customer_code)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="show_customer_alert">
+                    <span class="required-asterisk"
+                      >* Space and special characters not allowed here</span
+                    >
+                  </div>
+                </div>
+
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Customer Name"
+                    [(ngModel)]="customer_name"
+                  />
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(customer_name)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div class="row">
+                <!-- <div class="col-sm-6">
+                            <input class="form-control" type="text" placeholder="Customer Type"
+                            [(ngModel)]="customer_type">
+                          </div> -->
+
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="number"
+                    placeholder="Total ATM Count"
+                    [(ngModel)]="atm_count"
+                    (input)="validate_atm_count()"
+                  />
+                  <div>
+                    <div *ngIf="countAlert">
+                      <span class="required-asterisk">* Invalid ATM count</span>
+                    </div>
+                    <div *ngIf="!countAlert">
+                      <span class="required-asterisk">
+                        *<span
+                          class="required-asterisk"
+                          *ngIf="show_blank_alert && nullCheck(atm_count)"
+                        >
+                          This is a required field
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Start Date"
+                    [(ngModel)]="from_date"
+                    bsDatepicker
+                    [bsConfig]="datepickerconfig"
+                    [minDate]="startDate"
+                    readonly
+                  />
+                  <i class="fa fa-calendar form-control-feedback"></i>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(from_date)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control has-feedback"
+                    type="text"
+                    placeholder="End Date"
+                    [(ngModel)]="end_date"
+                    bsDatepicker
+                    [bsConfig]="datepickerconfig"
+                    [minDate]="from_date"
+                    readonly
+                  />
+                  <i class="fa fa-calendar form-control-feedback"></i>
+
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(end_date)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Name"
+                    [(ngModel)]="contact_person_name"
+                  />
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="
+                          show_blank_alert && nullCheck(contact_person_name)
+                        "
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Phone Number"
+                    [(ngModel)]="phone_no"
+                    [maxlength]="10"
+                    (input)="validateMobileNumber()"
+                  />
+                  <div *ngIf="showmobAlert">
+                    <span class="mobile-validation"
+                      >* {{ mobileNoRemark }}</span
+                    >
+                  </div>
+                  <div *ngIf="!showmobAlert">
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(phone_no)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Email Id"
+                    [(ngModel)]="user_email"
+                    (input)="validateEmailId()"
+                  />
+                  <div *ngIf="!showEmailAlert">
+                    <span class="required-asterisk">
+                      *<span *ngIf="show_blank_alert && nullCheck(user_email)">
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="showEmailAlert">
+                    <span class="required-asterisk">* Invalid Email Id</span>
+                  </div>
+                </div>
+              </div>
+              <br />
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Username(Employee Code)"
+                    [(ngModel)]="admin_emp_code"
+                  />
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(admin_emp_code)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!isSelected">Select CMS Executive User</span>
+                      <span *ngIf="isSelected">{{ user }} <b>&#10004;</b></span>
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of executiveList">
+                        <a (click)="user = z.name; getSelectedexec(z)">{{
+                          z.name
+                        }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !isSelected"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <table class="table">
+                    <tbody>
+                      <tr id="conf">
+                        <td>Transaction Approval</td>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="active_transaction"
+                            id="act_trans"
+                            [(ngModel)]="active_transaction"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-sm-3">
+                  <table class="table">
+                    <tbody>
+                      <tr id="conf">
+                        <td>Master Approval</td>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="active_master"
+                            id="act_master"
+                            [(ngModel)]="active_master"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-3">
+                  <b>Upload Company Logo : </b>
+                  <br /><br />
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    #imageInput
+                    accept="image/*"
+                    (change)="getImageData($event)"
+                  />
+                </div>
+              </div>
+              <div class="row"></div>
+              <br />
+            </div>
+          </div>
+        </div>
+        <!-- <div  *ngIf="!flagEditCustomers" class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Fill Customer Admin Details &nbsp; 
+                            </h4>
+                    </div>
+    
+                    <div id="collapse7" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                          <div  class="row" >
+                            <div class="col-sm-6">
+                              <input class="form-control" type="text" placeholder="Admin name"
+                              [(ngModel)]="admin_name">
+                            </div>
+    
+                            <div class="col-sm-6">
+                              <input class="form-control" type="text" placeholder="Admin Contact Number"
+                              [(ngModel)]="admin_contact_no">
+                            </div>
+                          </div><br>
+    
+                          <div  class="row" >
+                            <div class="col-sm-6">
+                              <input class="form-control" type="text" placeholder="Admin Email ID"
+                              [(ngModel)]="admin_email">
+                            </div>
+    
+                            <div class="col-sm-6">
+                              <input class="form-control" type="text" placeholder="Admin Username"
+                              [(ngModel)]="admin_username">
+                            </div>
+                          </div><br>
+    
+                        </div>
+                    </div>
+                </div>
+              </div> -->
+        <div *ngIf="flagEditCustomers" class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">Edit Customer Details &nbsp;</h4>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div *ngIf="!editDetailsCustomer" class="row">
+                <div class="col-sm-8">
+                  <div class="col-sm-6">
+                    <div class="dropdown">
+                      <ng-select
+                        [items]="customerList$ | async"
+                        bindLabel="CompanyCode"
+                        placeholder="Select Customer"
+                        [clearable]="clearable_customer"
+                        class="fitalign"
+                        (change)="getCustomerNameFlag($event)"
+                        [(ngModel)]="customer"
+                      >
+                      </ng-select>
+                      <!-- [clearable]=""
+                              (focus)="" -->
+                      <!-- <button
+                        class="btn btn-default dropdown-toggle fitalign"
+                        type="button"
+                        id="dropdownMenu1reg"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                      >
+                        <span *ngIf="!isCustomerSelected">Select Customer</span>
+                        <span *ngIf="isCustomerSelected"
+                          >{{ customer }} <b>&#10004;</b></span
+                        >
+                        &nbsp;<span class="caret"></span>
+                      </button>
+                      <ul
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenu1reg"
+                      >
+                        <li *ngFor="let z of customers">
+                          <a
+                            (click)="
+                              customer = z.CompanyCode; getCustomerNameFlag(z)
+                            "
+                            >{{ z.CompanyCode }}</a
+                          >
+                        </li>
+                      </ul> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div *ngIf="!editDetailsCustomer" class="row">
+                <div class="col-sm-4">
+                  <div class="col-sm-6">
+                    <button
+                      class="btn btn-default"
+                      (click)="back_to_new_cust()"
+                      [disabled]="confirm_pressed"
+                    >
+                      <span class="glyphicon glyphicon-arrow-left"></span>
+                      &nbsp; Back
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Company Code"
+                    [(ngModel)]="company_code"
+                    readonly
+                  />
+                </div>
+
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Company Name"
+                    [(ngModel)]="company_name"
+                    readonly
+                  />
+                </div>
+              </div>
+              <br />
+
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Start Date"
+                    [(ngModel)]="from_date"
+                    readonly
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="End Date"
+                    [(ngModel)]="to_date"
+                    readonly
+                  />
+                </div>
+              </div>
+              <br />
+
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Name"
+                    [(ngModel)]="contact_person_name"
+                    readonly
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Contact Person Phone Number"
+                    [(ngModel)]="phone_no"
+                    readonly
+                  />
+                </div>
+              </div>
+              <br />
+
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="email"
+                    placeholder="Contact Person Email Id"
+                    [(ngModel)]="user_email"
+                    readonly
+                  />
+                </div>
+
+                <div *ngIf="editDetailsCustomer" class="col-sm-6">
+                  <input
+                    class="form-control"
+                    type="email"
+                    placeholder="Executive Name"
+                    [(ngModel)]="cms_executive"
+                    readonly
+                  />
+                </div>
+              </div>
+              <br />
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-3">
+                  <table class="table">
+                    <tbody>
+                      <tr id="conf">
+                        <td>Transaction Approval</td>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="active_transaction"
+                            id="act_trans"
+                            [(ngModel)]="active_transaction"
+                            [disabled]="true"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-sm-3">
+                  <table class="table">
+                    <tbody>
+                      <tr id="conf">
+                        <td>Master Approval</td>
+                        <td>
+                          <input
+                            type="checkbox"
+                            name="active_master"
+                            id="act_master"
+                            [(ngModel)]="active_master"
+                            [disabled]="true"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- <div *ngIf=" editDetailsCustomer" class="row">
+                        <div class="col-sm-6">
+                          <input class="form-control" type="email" placeholder="Contact Person Email Id"
+                          [(ngModel)]="user_email"  readonly>
+                        </div>
+
+                        <div  *ngIf="editDetailsCustomer" class="col-sm-6">
+                          <input class="form-control" type="email" placeholder="Excecutive Name"
+                           [(ngModel)]="cms_executive"  readonly >
+                        </div>                        
+                      </div> -->
+              <div *ngIf="editDetailsCustomer" class="row">
+                <div class="col-sm-2">
+                  <button
+                    class="btn btn-default"
+                    (click)="back_screen()"
+                    [disabled]="confirm_pressed"
+                  >
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    &nbsp; Back
+                  </button>
+                </div>
+                <div class="col-sm-2">
+                  <button
+                    class="btn btn-primary"
+                    (click)="deactivateCustomer()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Deactivate
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-1">
+          <button
+            *ngIf="!flagEditCustomers"
+            class="btn btn-primary"
+            (click)="navigateToScreen()"
+            [disabled]="confirm_pressed"
+          >
+            Create
+          </button>
+        </div>
+        <div class="col-sm-1">
+          <button
+            *ngIf="!flagEditCustomers"
+            class="btn btn-primary"
+            (click)="editCustomer()"
+            [disabled]="confirm_pressed"
+          >
+            Edit Customer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

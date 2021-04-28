@@ -1,0 +1,91 @@
+<div class="main-content">
+  <div class="row">
+
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-3 text-center"  *ngIf="!password_mode">
+
+      <h4>Register to continue</h4>
+      <input class="form-control" type="text" placeholder="Employee ID" [(ngModel)]="emp_id">
+      <input class="form-control" (keyup.enter)="sendEmpID()" type="text" placeholder="Company Code"
+        [(ngModel)]="comp_code">
+      <br>
+      <button class="btn btn-default" (click)="router.navigateByUrl('/login')">Login</button>
+      &nbsp;
+      <button class="btn btn-primary" (click)="sendEmpID()">Proceed</button>
+      <br>
+      <br>
+      <h5 *ngIf="invalid_emp" class="pull-center text-danger">Invalid employee credentials.</h5>
+      <h5 *ngIf="already_reg" class="pull-center text-danger">You have already registered.</h5>
+    </div>
+
+    <div class="col-sm-3 text-center" *ngIf="password_mode">
+
+      <h4>Complete your registration</h4>
+      <input class="form-control" type="text" placeholder="Name" [(ngModel)]="name" readonly>
+      <input class="form-control" type="text" placeholder="Designation" [(ngModel)]="title" readonly>
+
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle fitalign role" type="button"
+          id="dropdownMenu4" aria-haspopup="true">
+          Role ID: {{ role_id }}
+        </button>
+        <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu4">
+          <li><a (click)="role_id = 1">1 (Auditor)</a></li>
+          <li><a (click)="role_id = 2">2 (Supervisor)</a></li>
+          <li><a (click)="role_id = 3">3 (Admin)</a></li>
+        </ul>
+      </div>
+
+      <!-- remove click and data toggle after user master has full demographics in database -->
+      <div class="dropdown">
+        <button [disabled]="zone_given" (click)="getDemographicFilter(null,null,null)" class="btn btn-default dropdown-toggle fitalign"
+          type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true">
+          Zone: {{zone | slice:0:10}}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu3">
+          <li *ngFor="let z of zones"><a (click)="getDemographicFilter(z,null,null)">{{ z }}</a></li>
+        </ul>
+      </div>
+
+      <div class="dropdown">
+        <button [disabled]="region_given" (click)="getDemographicFilter(zone,null,null)" class="btn btn-default dropdown-toggle fitalign"
+          type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true">
+          Region: {{region | slice:0:10}}
+          <span class="caret"></span>
+        </button>
+        <ul *ngIf="this.zone" class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu4">
+          <li *ngFor="let r of regions"><a (click)="getDemographicFilter(zone,r,null)">{{ r }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dropdown">
+        <button [disabled]="location_given" (click)="getDemographicFilter(zone,region,null)" class="btn btn-default dropdown-toggle fitalign"
+          type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true">
+          Location: {{location | slice:0:10}}
+          <span class="caret"></span>
+        </button>
+        <ul *ngIf="this.region" class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu5">
+          <li *ngFor="let l of locations"><a (click)="getDemographicFilter(zone,region,l)">{{ l }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <input class="form-control" type="text" placeholder="Userame" [(ngModel)]="username" readonly>
+      <input class="form-control" type="password" placeholder="Choose a password" [(ngModel)]="pass1">
+      <input class="form-control" type="password" placeholder="Re-enter password" [(ngModel)]="pass2"
+        (keyup.enter)="passwordSend()">
+      <br>
+      <button class="btn btn-primary" (click)="passwordSend()">Continue to Login</button>
+      &nbsp;
+      <br>
+      <br>
+      <h5 *ngIf="invalid_reg" class="pull-center text-danger">{{ invalid_msg }}</h5>
+    </div>
+
+    <div class="col-sm-8">
+    </div>
+  </div>
+</div>

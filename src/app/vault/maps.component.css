@@ -1,0 +1,80 @@
+a, a:hover, a:focus {
+    color: black;
+}
+.table > tbody > tr:first-child > td {
+    border: none;
+}
+input, textarea {
+    margin-top: 10px;
+    border-color:grey;
+}
+::placeholder { /* Firefox, Chrome, Opera */ 
+    color: grey;
+} 
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */ 
+    color: grey;
+} 
+  
+::-ms-input-placeholder { /* Microsoft Edge */ 
+    color: grey;
+} 
+button {
+    margin-left: 10px;
+}
+h5 {
+    margin-left: 5px;
+}
+#conf  {
+    background-color: #f3f3f3;
+}
+#conf  > td {
+    border: none;
+}
+
+i {
+    font-size: 150%;
+    color: #2ecc72;
+    float: right;
+}
+
+.i2 {
+    color: orange;
+}
+
+.main-content {
+    padding: 20px 10px;
+    font-size: 110%;
+}
+
+.panel-body {
+    padding: 10px;
+}
+
+.panel-title {
+    color: #242424;
+    font-size: 120%;
+}
+.nomargins {
+    margin: 0px;
+}
+
+.text-success {
+    color: #2e965b !important;
+}
+
+.fitalign {
+    margin-left: 0px;
+    margin-top: 10px;
+}
+.word-wrap {
+    word-break: break-all;
+}
+.no-wrap {
+    white-space: nowrap;
+}
+
+canvas {
+    height: auto;
+    width: 100%;
+}

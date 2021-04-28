@@ -1,0 +1,5 @@
+/* You can add global styles to this file, and also import other style files */
+
+.theme-green.bs-datepicker-head {
+  background-color: #3472f7 !important;
+}

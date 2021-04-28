@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" (click)="sidebarToggle()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a *ngIf="!isTrivial(getTitle())" class="navbar-brand">{{getTitle()}}</a>
+            <a *ngIf="isTrivial(getTitle())" class="navbar-brand">OTC WEB PORTAL</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          
+            <ul *ngIf="login_token" class="nav navbar-nav navbar-right">
+                <li>
+                    <a>
+                        <p>{{ access['Entity']['UserName'] }}</p>
+                    </a>
+
+                </li>
+                <li>
+                    <a [routerLink]="['/password']">
+                        <p>Change Password</p>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="['/login']">
+                        <p>Logout</p>
+                    </a>
+                </li>
+             
+                <li class="separator hidden-lg hidden-md"></li>
+            </ul>
+        </div>
+    </div>
+</nav>

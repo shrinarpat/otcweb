@@ -1,0 +1,419 @@
+<div *ngIf="login_token" id="pagetop">
+  <div class="main-content">
+    <div *ngIf="!review_mode">
+      <div class="panel-group" id="accordion">
+        <div *ngIf="permission_flag" class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion">
+              <h4 class="panel-title">Add New ATM &nbsp;</h4>
+            </a>
+          </div>
+          <div id="collapse7" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div *ngIf="!flagnewATM" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary"
+                    (click)="createNewATM()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Add New ATM
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+
+                <div class="col-sm-4"></div>
+              </div>
+
+              <div *ngIf="flagnewATM" class="row">
+                <!-- <div class="col-sm-4">
+                                    <input type="file" (change)="onFileChange($event)" multiple="false">
+                                </div> -->
+                <div class="col-sm-4">
+                  <!-- <input class="form-control" type="text" placeholder="Company Code"
+                                        [(ngModel)]="company_ID" > -->
+
+                  <div class="dropdown" *ngIf="isCMS">
+                    <!-- *! implement ng-select here -->
+
+                    <ng-select
+                      [items]="company_list$ | async"
+                      bindLabel="CompanyCode"
+                      [loading]="companies_loading"
+                      class="fitalign"
+                      [(ngModel)]="selectedCompanyCode"
+                      [virtualScroll]="virtual_scroll_company"
+                      (focus)="getCompanies()"
+                      [clearable]="clearable_company"
+                      placeholder="Select Company Code"
+                      (change)="getCompanyFlag($event)"
+                    ></ng-select>
+
+                    <!-- [(ngModel)]="selectedCompanyCode"
+                       <button
+                      (click)="getCompanies()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!company_flag">Select Company Code</span>
+                      <span *ngIf="company_flag"
+                        >{{ selectedCompanyCode }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of company_list">
+                        <a (click)="getCompanyFlag(z)">{{ z.CompanyCode }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!isCMS">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Company Code"
+                      [(ngModel)]="company_code"
+                      readonly
+                    />
+                  </div>
+                  <span class="required-asterisk"
+                    >*
+                    <span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(atm_code)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+
+                <div class="col-sm-4">
+                  <div *ngIf="showbranch" class="dropdown">
+                    <!-- *! ng-select Implemention -->
+                    <ng-select
+                      placeholder="Select Branch"
+                      [items]="branch_list$ | async"
+                      bindLabel="BranchLabel"
+                      [virtualScroll]="virtual_scroll_branch"
+                      [clearable]="clearable_branch"
+                      [loading]="branches_loading"
+                      class="fitalign"
+                      [disabled]="disabledBranchSelection"
+                      [(ngModel)]="selectedBranchName"
+                      (change)="getBranchFlag($event)"
+                      (focus)="getBranches()"
+                    >
+                    </ng-select>
+                    <!-- (focus)="onGetBranch()" 
+                    -->
+
+                    <!-- <button
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagbranchtype">Select Branch</span>
+                      <span *ngIf="flagbranchtype"
+                        >{{ selectedBranchName }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of branches">
+                        <a (click)="getBranchFlag(z)">{{
+                          z.BranchName + "(" + z.BranchCode + ")"
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!showbranch">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Branch Code"
+                      [(ngModel)]="selectedBranchCode"
+                      readonly
+                    />
+                  </div>
+                  <span class="required-asterisk"
+                    >*
+                    <span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(atm_code)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder=" Type ATM Code"
+                    [maxlength]="25"
+                    [(ngModel)]="atm_code"
+                    (input)="validateAtmCode()"
+                    required
+                  />
+                  <div *ngIf="!show_atm_alert">
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(atm_code)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="show_atm_alert">
+                    <span class="required-asterisk"
+                      >* Space and special characters not allowed here</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="flagnewATM" class="row">
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Bank Name"
+                    [maxlength]="100"
+                    [(ngModel)]="bank_name"
+                    required
+                  />
+                  <span class="required-asterisk">
+                    *<span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(bank_name)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Address"
+                    [maxlength]="200"
+                    [(ngModel)]="address"
+                    required
+                  />
+                  <span class="required-asterisk">
+                    *<span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(address)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="PIN Code"
+                    [(ngModel)]="pin_code"
+                    [maxlength]="6"
+                    (input)="validatePinCode()"
+                    required
+                  />
+                  <div *ngIf="!show_pin_alert">
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(pin_code)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                  <div *ngIf="show_pin_alert">
+                    <span class="required-asterisk">* Invalid Pin Code</span>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="flagnewATM" class="row">
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="ATMLockSerialNo"
+                    [(ngModel)]="atm_serialNo"
+                    [maxlength]="50"
+                    required
+                  />
+                  <span class="required-asterisk">
+                    *<span
+                      class="required-asterisk"
+                      *ngIf="show_blank_alert && nullCheck(atm_serialNo)"
+                    >
+                      This is a required field
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <br /><br />
+              <div *ngIf="flagnewATM" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="saveNewATM()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion">
+              <h4 class="panel-title">
+                Edit ATM &nbsp;
+                <span (click)="showFilter()">
+                  <i class="pe-7s-filter pe-4x pe-va">Filter</i></span
+                >
+              </h4>
+            </a>
+          </div>
+
+          <div *ngIf="show_filter" class="panel-body">
+            <div class="col-xs-6 col-sm-2" *ngIf="isCMS">
+              <label>&nbsp;&nbsp;Company Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Company..."
+                [(ngModel)]="comp_code"
+                (input)="filter($event.target.value, 3)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Branch Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Branch..."
+                [(ngModel)]="br_code"
+                (input)="filter($event.target.value, 2)"
+              />
+            </div>
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;ATM Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search ATM... "
+                [(ngModel)]="atm_codef"
+                (input)="filter($event.target.value, 1)"
+              />
+            </div>
+          </div>
+          <div class="panel-collapse collapse in">
+            <table *ngIf="got_atm" class="table">
+              <thead>
+                <tr>
+                  <th>Company CODE</th>
+                  <th>Branch CODE</th>
+                  <th>ATM ID</th>
+                  <!-- <th>ATMLockSerialNo</th> -->
+                  <th *ngIf="permission_flag">De-Activate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  (click)="editATM(i)"
+                  *ngFor="
+                    let item of atm_list
+                      | paginate: { itemsPerPage: 8, currentPage: p };
+                    let i = index;
+                    let odd = odd
+                  "
+                  [ngClass]="odd ? 'odd_col' : 'even_col'"
+                >
+                  <td>{{ item["CompanyName"] }}</td>
+                  <td>{{ item["BranchCode"] }}</td>
+                  <td>{{ item["ATMID"] }}</td>
+                  <!-- <td>{{ item['region'] }}</td> -->
+                  <td *ngIf="permission_flag">
+                    <input
+                      type="checkbox"
+                      name="activate"
+                      [(ngModel)]="item.Checked"
+                      id="item+i"
+                      id="act"
+                      (change)="getCheckboxValues($event, item)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls *ngIf="got_atm" (pageChange)="p = $event">
+            </pagination-controls>
+            <div *ngIf="!got_atm">
+              <br />
+              <h5 class="text-primary">&nbsp;Loading...</h5>
+            </div>
+            <div *ngIf="flagEditATM" class="panel-body">
+              <!-- <div class="row">
+                                <div class="col-sm-4">
+                                    <h4>ATM Details</h4>
+                                </div>
+                            </div> -->
+
+              <!-- <div   class="row" >
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="atm_id1" readonly>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="atm_location"  readonly>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="atm_zone" readonly>
+                                </div>
+                                
+                            </div> -->
+              <br />
+              <!-- in case of submit Edit details -->
+              <div *ngIf="flagEditATM" class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="confirmSubmitATM()"
+                    [disabled]="confirm_pressed"
+                  >
+                    submit
+                  </button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,509 @@
+<div *ngIf="login_token" id="pagetop">
+  <div class="main-content" id="testId">
+    <div *ngIf="!review_mode">
+      <div class="panel-group" id="accordion">
+        <div *ngIf="permission_flag" class="panel panel-default">
+          <div class="panel-heading">
+            <a
+              (click)="checkGeneralData()"
+              data-toggle="collapse"
+              data-parent="#accordion"
+            >
+              <h4 class="panel-title">Add ATM Employee Mapping &nbsp;</h4>
+            </a>
+          </div>
+          <div class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <!-- <input class="form-control" type="text" placeholder="Company Code"
+                                        [(ngModel)]="company_ID" > -->
+                  <div class="dropdown" *ngIf="isCMS">
+                    <ng-select
+                      [items]="company_list$ | async"
+                      bindLabel="CompanyCode"
+                      placeholder="Select Company"
+                      [(ngModel)]="selectedCompanyCode"
+                      [loading]="companies_loading"
+                      [clearable]="clearable_company"
+                      [disabled]="disabledCompanySelection"
+                      [virtualScroll]="virtual_scroll_company"
+                      (focus)="getCompanies()"
+                      (change)="getCompanyFlag($event)"
+                      class="fitalign"
+                    >
+                    </ng-select>
+                    <!--[(ngModel)]="selectedCompanyCode"
+                       <button
+                      (click)="getCompanies()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!company_flag">Select Company Code</span>
+                      <span *ngIf="company_flag"
+                        >{{ selectedCompanyCode }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of company_list">
+                        <a (click)="getCompanyFlag(z)">{{ z.CompanyCode }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!isCMS">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Company Code"
+                      [(ngModel)]="company_code"
+                      readonly
+                    />
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !company_flag"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="dropdown" *ngIf="showbranch">
+                    <!-- *! implementation of ng-select for branch selection -->
+                    <ng-select
+                      [items]="branch_list$ | async"
+                      bindLabel="BranchLabel"
+                      (focus)="getBranches()"
+                      placeholder="Select Branch"
+                      class="fitalign"
+                      [virtualScroll]="virtual_scroll_branch"
+                      [clearable]="clearable_branch"
+                      [loading]="branches_loading"
+                      [(ngModel)]="selectedBranchName"
+                      (change)="getBranchFlag($event)"
+                      [disabled]="disabledBranchSelection"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getBranches()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagbranchtype">Select Branch</span>
+                      <span *ngIf="flagbranchtype"
+                        >{{ selectedBranchName }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of branch_list">
+                        <a (click)="getBranchFlag(z)">{{
+                          z.BranchName + "(" + z.BranchCode + ")"
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div *ngIf="!showbranch">
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Branch Code"
+                      [(ngModel)]="selectedBranchCode"
+                      readonly
+                    />
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagbranchtype"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="dropdown">
+                    <!-- *! ng-select for atmList -->
+                    <ng-select
+                      [items]="atm_list$ | async"
+                      bindLabel="ATMID"
+                      placeholder="Select ATM ID"
+                      class="fitalign"
+                      [virtualScroll]="virtual_scroll_atm"
+                      [loading]="atm_loading"
+                      [disabled]="disabledAtmSelection"
+                      [clearable]="clearable_atm"
+                      (focus)="getAtmList()"
+                      (change)="getAtmFlag($event)"
+                      [(ngModel)]="atm_code"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getAtmList()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagatm">Select ATM ID</span>
+                      <span *ngIf="flagatm"
+                        >{{ atm_code }} <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of atms">
+                        <a (click)="atm_code = z.ATMID; getAtmFlag(z)">{{
+                          z.ATMID
+                        }}</a>
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagatm"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <!-- <div class="col-sm-4">
+                                    <input auto-complete   class="form-control" type="text" placeholder="ATM ID"
+                                    [(ngModel)]="atm_id" [source]="atm_id_list" max-num-list=20, min-chars=3 >                                    
+                                </div> -->
+                <!-- <div class="col-sm-4">
+                                    <input auto-complete class="form-control" type="text" min="0"
+                                        placeholder="Employee CODE of Employee 1" [(ngModel)]="emp_id1"
+                                        [source]="emp_id_list" max-num-list=20, min-chars=2
+                                        (ngModelChange)="name_cust1=name_cust_list[emp_id_list.indexOf(emp_id1)]">
+                                      
+                                </div> -->
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <!-- <input class="form-control" type="text" placeholder="Name of Employee 1"
+                                        [(ngModel)]="name_cust1" readonly> -->
+                  <div class="dropdown">
+                    <!-- *! employee ng-select -->
+                    <ng-select
+                      [items]="employee_list1$ | async"
+                      bindLabel="emp1Label"
+                      placeholder="Select Employee Code of Employee 1"
+                      class="fitalign"
+                      [loading]="emp1_loading"
+                      [disabled]="disabledEmp1Selection"
+                      [clearable]="clearable_emp1"
+                      [virtualScroll]="virtual_scroll_emp1"
+                      (focus)="getEmployee1List()"
+                      (change)="getEmployeeFlag1($event)"
+                      [(ngModel)]="emp1_selected_value"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getEmployee1List()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagemp1"
+                        >Select Employee Code of Employee 1</span
+                      >
+                      <span *ngIf="flagemp1"
+                        >{{ name_cust1 + "(" + selectedEmp1Code + ")" }}
+                        <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of employees1">
+                        <a (click)="getEmployeeFlag1(z)">
+                          {{ z.employeeName + "(" + z.employeeCode + ")" }}</a
+                        >
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagemp1"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Name of Employee 1"
+                                        [(ngModel)]="name_cust1" readonly>
+                                </div> -->
+
+                <div class="col-sm-4">
+                  <!-- <input auto-complete class="form-control" type="text" min="0"
+                                        placeholder="Employee CODE of Employee 2" [(ngModel)]="emp_id2"
+                                        [source]="emp_id_list" max-num-list=20, min-chars=2
+                                        (ngModelChange)="name_cust2=name_cust_list[emp_id_list.indexOf(emp_id2)]"> -->
+                  <div class="dropdown">
+                    <!-- *! ng-select for emp2 -->
+                    <ng-select
+                      [items]="employee_list2$ | async"
+                      bindLabel="emp2Label"
+                      placeholder="Select Employee code of Employee 2"
+                      class="fitalign"
+                      [loading]="emp2_loading"
+                      [virtualScroll]="virtual_scroll_emp2"
+                      [clearable]="clearable_emp2"
+                      [disabled]="disabledEmp2Selection"
+                      (focus)="getEmployee2List()"
+                      (change)="getEmployeeFlag2($event)"
+                      [(ngModel)]="emp2_selected_value"
+                    >
+                    </ng-select>
+                    <!-- <button
+                      (click)="getEmployee2List()"
+                      class="btn btn-default dropdown-toggle fitalign"
+                      type="button"
+                      id="dropdownMenu1reg"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                    >
+                      <span *ngIf="!flagemp2"
+                        >Select Employee code of Employee 2</span
+                      >
+                      <span *ngIf="flagemp2"
+                        >{{ name_cust2 + "(" + selectedEmp2Code + ")" }}
+                        <b>&#10004;</b></span
+                      >
+                      &nbsp;<span class="caret"></span>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenu1reg"
+                    >
+                      <li *ngFor="let z of employee_list2">
+                        <a (click)="getEmployeeFlag2(z)">
+                          {{ z.employeeName + "(" + z.employeeCode + ")" }}</a
+                        >
+                      </li>
+                    </ul> -->
+                  </div>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && !flagemp2"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="From Date"
+                    [(ngModel)]="from_date"
+                    bsDatepicker
+                    [bsConfig]="datepickerconfig"
+                    [minDate]="minDate"
+                    readonly
+                  />
+                  <i class="fa fa-calendar form-control-feedback"></i>
+                  <div>
+                    <span class="required-asterisk">
+                      *<span
+                        class="required-asterisk"
+                        *ngIf="show_blank_alert && nullCheck(from_date)"
+                      >
+                        This is a required field
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <!-- <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Company Code"
+                                    [(ngModel)]="route_cpde" >
+                                </div> -->
+                <!-- <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Name of Employee 2"
+                                        [(ngModel)]="name_cust2" readonly>
+                                </div> -->
+
+                <!-- <div class="col-sm-4">
+                                    <input class="form-control" type="text"  placeholder="To Date"
+                                    [(ngModel)]="to_date"  bsDatepicker [bsConfig]="datepickerconfig" [minDate]="minDate" readonly >
+                               
+                                </div> -->
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-sm-4">
+                  <button
+                    class="btn btn-primary pull-left"
+                    (click)="saveNewMapping()"
+                    [disabled]="confirm_pressed"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion">
+              <h4 class="panel-title">
+                ATM Employee Mapping &nbsp;
+                <span (click)="showFilter()">
+                  <i class="pe-7s-filter pe-4x pe-va">Filter</i></span
+                >
+              </h4>
+            </a>
+          </div>
+          <div *ngIf="show_filter" class="panel-body">
+            <div class="col-xs-6 col-sm-2" *ngIf="isCMS">
+              <label>&nbsp;&nbsp;Company Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder="Search Company..."
+                [(ngModel)]="comp_code"
+                (input)="filter($event.target.value, 2)"
+              />
+            </div>
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;ATM Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search ATM... "
+                [(ngModel)]="atm_codef"
+                (input)="filter($event.target.value, 1)"
+              />
+            </div>
+
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Employee 1 Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Employee1..."
+                [(ngModel)]="emp_code1"
+                (input)="filter($event.target.value, 3)"
+              />
+            </div>
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Employee 2 Code&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="text"
+                placeholder=" Search Employee2..."
+                [(ngModel)]="emp_code2"
+                (input)="filter($event.target.value, 4)"
+              />
+            </div>
+            <div class="col-xs-6 col-sm-2">
+              <label>&nbsp;&nbsp;Re-Map List&nbsp;&nbsp;</label>
+              <input
+                class="form-control filter"
+                type="checkbox"
+                (change)="filter($event.target.checked, 5)"
+              />
+            </div>
+          </div>
+
+          <div class="panel-collapse collapse in">
+            <table *ngIf="got_data" class="table">
+              <thead>
+                <tr>
+                  <th>Company Code</th>
+                  <th>ATM CODE</th>
+                  <th>Employee 1 CODE</th>
+                  <!-- <th>Employee 1 Name</th> -->
+                  <th>Employee 2 CODE</th>
+                  <!-- <th>Employee 2 Name</th> -->
+
+                  <th>From Date</th>
+                  <th>TO Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let i of mapping_list
+                      | paginate: { itemsPerPage: 8, currentPage: p };
+                    let i = index;
+                    let odd = odd
+                  "
+                >
+                  <td>{{ i["compCode"] }}</td>
+                  <td>{{ i["atmCode"] }}</td>
+                  <td>{{ i["empCode1"] }}</td>
+                  <!-- <td>{{ i['cust_name1'] }}</td> -->
+                  <td *ngIf="i['atmEmpStatusCode'] === 0">
+                    {{ i["empCode2"] }}
+                  </td>
+                  <td
+                    *ngIf="i['atmEmpStatusCode'] === 1"
+                    (click)="ReMapEmp2(i)"
+                    class="reMapEmp"
+                  >
+                    Re-Map EMP2
+                  </td>
+                  <td *ngIf="i['atmEmpStatusCode'] === 2">-</td>
+                  <!-- <td>{{ i['cust_name2'] }}</td> -->
+
+                  <td>{{ Dateformattter(i["FromDate"]) }}</td>
+                  <td>{{ Dateformattter(i["ToDate"]) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <pagination-controls *ngIf="got_data" (pageChange)="p = $event">
+            </pagination-controls>
+            <div *ngIf="!got_data">
+              <br />
+              <h5 class="text-primary">&nbsp;Loading...</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

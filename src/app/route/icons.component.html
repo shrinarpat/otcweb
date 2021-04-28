@@ -1,0 +1,157 @@
+<div *ngIf="login_token" id="pagetop">
+    <div  class="main-content">
+        <div *ngIf="!review_mode">
+            <div class="panel-group"  *ngIf="got_transactions" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a (click)="checkGeneralData()" data-toggle="collapse" data-parent="#accordion"
+                            >
+                            <h4 class="panel-title">
+                                Approval Screen  &nbsp; 
+                            </h4>
+                        </a>
+                    </div>
+                    <div  *ngIf="transaction_list ; else elseBlock" class="panel-collapse collapse in">
+                        <table  class="table" >
+                            <thead>
+                              <tr>
+                                <!-- <th><input type="checkbox" [checked]="isAllCheckBoxChecked()" (change)="checkAllCheckBox($event)"></th>   -->
+                                <th>TYPE OF TRANSACTION</th>
+                                <th>COMPANY NAME</th>
+                                <th>CREATED DATE</th>
+                                <th>CREATED BY </th>
+                                <!-- <th>APPROVAL STATUS</th> -->
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr (click)="approveTransactions(tran)"
+                                *ngFor="let tran of response_getTransaction | paginate: { itemsPerPage: 8, currentPage: p }; let i = index ;let odd = odd" [ngClass]="odd ? 'odd_col' : 'even_col'">
+                                <td>{{ tran['Type'].toUpperCase() }}</td>
+                                <td>{{ tran['CompanyName'] }}</td>
+                                 <td>{{ Dateformattter(tran['CreatedDate']) }}</td>
+                                <!-- <td *ngIf ="!tran.approve">{{ tran['expiry_date'] }}</td> -->
+                                <td>{{  tran['UserName'] }} ({{ tran['CreatedBy'] }})</td>
+                                </tr>
+                            </tbody>
+                      
+                          </table>
+                          <pagination-controls *ngIf="transaction_list" (pageChange)="p = $event">
+                          </pagination-controls>
+                              
+                    </div>
+                    <br>
+                    <br>
+                    <ng-template #elseBlock>No record found</ng-template>
+                </div>
+             
+            </div>
+            <div  *ngIf="full_transactions" class="panel-group"  id="accordion">
+                <div class="row">
+                    <button class="btn btn-default " (click)="back_screen()" [disabled]="confirm_pressed">
+                        <span class="glyphicon glyphicon-arrow-left"></span>
+                        &nbsp; Back
+                    </button>
+                </div> 
+                <br>
+                <div  class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                                Transaction Details  &nbsp; 
+                        </h4>
+                    </div>
+                    <br>
+                    <div class="panel-collapse collapse in" id="collapse7">
+                      
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <h6>Transaction Type</h6>
+                                    <input  *ngIf="full_transactions" class="form-control" type="text"
+                                                [(ngModel)]="data1"  readonly>
+                                </td>
+                                <td>
+                                    <h6>Company Name</h6>
+                                    <input  *ngIf="full_transactions" class="form-control" type="text" 
+                                                [(ngModel)]="data2"  readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h6>Date of Creation</h6>
+                                    <input  *ngIf="full_transactions" class="form-control" type="text" 
+                                    [(ngModel)]="data3"  readonly>  
+                                </td>
+                                <td>
+                                    <h6>Created by</h6>
+                                    <input  *ngIf="full_transactions" class="form-control" type="text" 
+                                    [(ngModel)]="data4"  readonly>
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+                    </div>
+                </div>
+                <br>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                            <h4 class="panel-title">
+                                 Data Submitted  &nbsp; 
+                            </h4>
+                    </div>
+                    <!-- style="overflow-x: scroll; overflow-y: scroll" -->
+                    <div id="collapse7"  class="panel-collapse collapse in scrollbar" >
+                        <table  class="table" >
+                            <thead>
+                                <tr>
+                                    <th *ngFor="let col_name of data_submit_header">{{col_name}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr 
+                                *ngFor="let d of approvalData let i = index ;let odd = odd" [ngClass]="odd ? 'odd_col' : 'even_col'">
+                                    <td *ngFor="let col_name of data_submit_header">
+                                        {{ formattingFunc(d[col_name.replaceAll(' ',"")],col_name) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>                     
+                    </div>
+                    <br>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- &nbsp; <b>Remarks (Only in case of rejection):</b> -->
+                        <div>
+                            <input  *ngIf="full_transactions" class="form-control" type="text" 
+                            [(ngModel)]="remarks" placeholder="Remarks (Mandatory in case of rejection)">
+                        </div>
+                        <div>
+                            <span class="required-asterisk">
+                                <span class="required-asterisk" *ngIf="show_remark_alert && nullCheck(remarks)">
+                                    * This is a required field in case of rejection
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <div  class="row" >
+                    <div class="col-sm-6">
+                        <button class="btn btn-default " (click)="back_screen()" [disabled]="confirm_pressed">
+                            <span class="glyphicon glyphicon-arrow-left"></span>
+                            &nbsp; Back
+                        </button>
+                        <button class="btn btn-primary " (click)="submitApproval('approve')" [disabled]="confirm_pressed">Approve</button>
+                        <button class="btn btn-danger " (click)="submitApproval('reject')" [disabled]="confirm_pressed">Reject</button>
+                    </div>
+                </div>
+                <br>
+            </div>
+             
+            </div>
+              
+    </div>
+    
+</div>
+

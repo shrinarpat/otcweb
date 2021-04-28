@@ -1,0 +1,46 @@
+input, textarea {
+    border-color:grey;
+}
+
+
+.form-control + .form-control-feedback {
+    margin-top: -29px;
+    margin-right: 12px;
+}
+
+::placeholder { /* Firefox, Chrome, Opera */ 
+    color: grey;
+} 
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */ 
+    color: grey;
+} 
+
+::-ms-input-placeholder { /* Microsoft Edge */ 
+    color: grey;
+} 
+
+.panel-title {
+    color: #242424;
+    font-size: 120%;
+    font-weight: bolder;
+}
+
+.dropdown-menu{
+    overflow-y:auto;
+    max-height: 200px;
+}
+
+.mobile-validation{
+    color: red;
+    margin-left: 3px;
+    margin-top: 0px;
+    font-size: 1.0em;
+}
+
+.required-asterisk{
+    color: red;
+    margin-left: 3px;
+    margin-top: 0px;
+    font-size: 1.0em;
+}

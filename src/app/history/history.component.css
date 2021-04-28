@@ -1,0 +1,163 @@
+a,
+a:hover,
+a:focus {
+  color: black;
+}
+.table > tbody > tr:first-child > td {
+  border: none;
+}
+input,
+textarea {
+  margin-top: 10px;
+  border-color: grey;
+}
+.form-control + .form-control-feedback {
+  margin-top: -29px;
+  margin-right: 12px;
+}
+::placeholder {
+  /* Firefox, Chrome, Opera */
+  color: grey;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: grey;
+}
+.i2 {
+  color: orange;
+}
+.glyphicon-plus:before {
+  font-size: 75%;
+  color: grey;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: grey;
+}
+button {
+  margin-left: 10px;
+}
+h5 {
+  margin-left: 5px;
+}
+#conf {
+  background-color: #f3f3f3;
+}
+#conf > td {
+  border: none;
+}
+
+i {
+  font-size: 150%;
+  color: rgb(30, 216, 61);
+  float: right;
+}
+
+.main-content {
+  padding: 20px 10px;
+  font-size: 110%;
+}
+
+.panel-body {
+  padding: 10px;
+}
+
+.panel-title {
+  color: #242424;
+  font-size: 120%;
+  font-weight: bolder;
+}
+.nomargins {
+  margin: 0px;
+}
+
+th {
+  color: black !important;
+  font-size: 100% !important;
+}
+
+.noborder > tbody > tr > td {
+  border: none;
+  margin: 0px;
+  padding: 0px 10px;
+}
+
+.text-success {
+  color: #2e965b !important;
+}
+
+.fitalign {
+  margin-left: 0px;
+  margin-top: 10px;
+  max-width: 100%;
+}
+.fitalign2 {
+  margin-left: 0px;
+  margin-top: 10px;
+}
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+.word-wrap {
+  word-break: break-all;
+}
+.no-wrap {
+  white-space: nowrap;
+}
+canvas {
+  height: auto;
+  width: 100%;
+}
+/* Chrome, Safari, Edge, Opera */
+#dskj input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+#dskj input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.required-asterisk {
+  color: red;
+  /* font-weight: bold; */
+  margin-left: 3px;
+  margin-top: 0px;
+  font-size: 1em;
+}
+td:hover {
+  background-color: #337ab7;
+}
+table.table tr.odd_col {
+  background: none;
+}
+table.table tr.even_col {
+  background: rgb(238, 232, 232);
+}
+
+.dropdown-menu {
+  overflow-y: auto;
+  max-height: 200px;
+}
+.panel-default > .panel-heading {
+  color: #333;
+  background-color: #ddd;
+  border-color: #291469;
+}
+.filter {
+  border-color: #337ab7;
+  border-width: 2.5px;
+}
+
+.reMapEmp {
+  /* margin-bottom: 20px;
+  border: 1px dotted #383cc1; */
+  color: #b9345a;
+  font-weight: bold;
+}

@@ -1,0 +1,207 @@
+<div *ngIf="login_token" id="pagetop">
+    <div  class="main-content">
+        <div *ngIf="!review_mode">
+            <div class="panel-group" id="accordion">
+                <div  class="panel panel-default">
+                    <div class="panel-heading">
+                        <a  data-toggle="collapse" data-parent="#accordion"
+                            href="#collapse7">
+                            <h4 class="panel-title">
+                                Add  Employee  &nbsp; 
+                            </h4>
+                        </a>
+                    </div>
+                    <div id="collapse7" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div  *ngIf="!flagnewEmp" class="row" >
+                                <div class="col-sm-4">
+                                    <button class="btn btn-primary " (click)="createNewEmp()" [disabled]="confirm_pressed">Add New Emp</button>
+                                </div>
+                                <div class="col-sm-4">
+                                   
+                                </div>
+                               
+                                <div class="col-sm-4">
+                                  
+                                </div>
+                            </div>
+
+                            <div  *ngIf="flagnewEmp" class="row">
+                                <!-- <div class="col-sm-4">
+                                    <input type="file" (change)="onFileChange($event)" multiple="false">
+                                </div> -->
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Emp CODE"
+                                        [(ngModel)]="Emp_code" >
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Emp ID"
+                                        [(ngModel)]="Emp_id" >
+                                </div>
+                               
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Bank Name"
+                                        [(ngModel)]="bank_name" >
+                                </div>
+                               
+                            </div>
+                            <div  *ngIf="flagnewEmp" class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="ADDRESS"
+                                        [(ngModel)]="address" >
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="COMPANY ID"
+                                        [(ngModel)]="CompanyID" >
+                                </div>
+                               
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Created BY"
+                                        [(ngModel)]="createdBy"  readonly>
+                                </div>
+                                   
+                            </div>
+                            <div  *ngIf="flagnewEmp" class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Route Code"
+                                        [(ngModel)]="route_cpde" >
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" placeholder="Location"
+                                        [(ngModel)]="location" >
+                                </div>
+                               
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Zone Code"
+                                        [(ngModel)]="zone_code" >
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control" type="text" placeholder="Branch ID"
+                                        [(ngModel)]="branch_id" >
+                                </div>
+                                   
+                            </div>
+
+                            <div  *ngIf="flagnewEmp" class="row">
+                                <!-- <div class="col-sm-12">
+                                    <table  class="table" >
+                                        <tbody>
+                                          <tr
+                                            *ngFor="let row of exelData | paginate: { itemsPerPage: 8, currentPage: p }; let i = index">
+                                            <td *ngFor="let cell of row">{{ cell }}</td>
+                                            
+                                            </tr>
+                                        </tbody>
+                                  
+                                      </table>
+                                      <pagination-controls *ngIf="flagPaginate"  (pageChange)="p = $event">
+                                      </pagination-controls>
+                               
+                                  
+                                   
+                                </div> -->
+                               
+                                  
+                               
+                                
+                                  
+                                   
+                            </div>
+
+
+                            <br><br>
+                            <div *ngIf="flagnewEmp" class="row">  
+                                <div class="col-sm-4">
+                                    <button class="btn btn-primary pull-left" (click)="saveNewEmp()" [disabled]="confirm_pressed">Submit</button>
+                                </div> 
+                                <div class="col-sm-4"> </div>
+                                <div class="col-sm-4"></div>
+                            </div>  
+                        </div>
+                        </div>
+                </div>
+                <div  class="panel panel-default">
+                    <div class="panel-heading">
+                        <a  data-toggle="collapse" data-parent="#accordion"
+                            href="#collapse7">
+                            <h4 class="panel-title">
+                                Edit Field Employee &nbsp; 
+                            </h4>
+                        </a>
+                    </div>
+                    <div id="collapse7" class="panel-collapse collapse in">
+                        <table *ngIf="got_Emp" class="table" >
+                            <thead>
+                              <tr>
+                                <th>Emp ID</th>
+                                <th>Emp CODE</th>
+                                <th>Location</th>
+                                <th>De-Activate</th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr (click)="editEmp(i)"
+                                *ngFor="let i of Emp_list | paginate: { itemsPerPage: 8, currentPage: p }; let i = index;let odd = odd" [ngClass]="odd ? 'odd_col' : 'even_col'">
+                                <td>{{ i['Emp_id'] }}</td>
+                                <td>{{ i['location'] }}</td>
+                                <td>{{i['zone']}}</td>
+                                <td><input type="checkbox" name="activate" id="act"></td>
+                                </tr>
+                            </tbody>
+                      
+                          </table>
+                          <pagination-controls *ngIf="got_Emp" (pageChange)="p = $event">
+                          </pagination-controls>
+                          <div *ngIf="!got_Emp ">
+                            <br>
+                            <h5 class="text-primary">&nbsp;Loading...</h5>
+                          </div>
+                         <div *ngIf="flagEditEmp" class="panel-body">
+                            <!-- <div class="row">
+                                <div class="col-sm-4">
+                                    <h4>Emp Details</h4>
+                                </div>
+                            </div> -->
+
+                            <!-- <div   class="row" >
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="Emp_id1" readonly>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="Emp_location"  readonly>
+                                </div>
+                                <div class="col-sm-4">
+                                    <input class="form-control" type="text" 
+                                        [(ngModel)]="Emp_zone" readonly>
+                                </div>
+                                
+                            </div> -->
+                            <br>
+                            <!-- in case of submit Edit details -->
+                            <div  *ngIf="flagEditEmp" class="row" >
+                                <div class="col-sm-4">
+                                    <button class="btn btn-primary pull-left" (click)="confirmSubmitEmp()" [disabled]="confirm_pressed">submit</button>
+                                </div>
+                                <div class="col-sm-4">
+                                    
+                                </div>
+                                <div class="col-sm-4">
+                                   
+                                </div>
+                               
+                            </div>
+                             
+                            
+                     </div> 
+                           
+                </div>
+                </div>
+              
+            </div>
+              
+    </div>
+    
+</div>

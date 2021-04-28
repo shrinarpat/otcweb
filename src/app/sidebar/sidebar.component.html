@@ -1,0 +1,24 @@
+
+<div class="sidebar-wrapper" style="background-color: #320773">
+    <div class="logo">
+        <a class="simple-text">
+            <!-- &nbsp;
+            <div class="logo-img">
+                <img src="/assets/img/cms_logo.png"/>
+            </div> -->
+            MENU <span class="pull-right" *ngIf="isMobileMenu()"><a [routerLink]="['/login']" (click)="sidebarClose()">{{task}}</a></span>
+        </a>
+    </div>
+    <ul *ngIf="login_token" class="nav responsive-nav" (click)="sidebarClose()">
+       
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}}">
+            <a  *ngIf="showItem(menuItem)" [routerLink]="[menuItem.path]">
+                <i  class="{{menuItem.icon}}"></i>
+                <p>{{menuItem.title}}</p>
+
+            </a>
+        </li>
+
+       
+    </ul>
+</div>
